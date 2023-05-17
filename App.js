@@ -1,20 +1,81 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, SafeAreaView } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-export default function App() {
+
+import Login from './component/Login';
+import TrangChu from './component/TrangChu';
+import ThongTin from './component/ThongTin';
+import DanhMuc from './component/DanhMuc';
+import GioHang from './component/GioHang';
+import ChiTietSP from './component/ChiTietSP';
+
+
+
+const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
+
+const TabMenu = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    <Tab.Navigator initialRouteName="TrangChu" screenOptions={{ headerShown: false }}>
+      <Tab.Screen name='TrangChu' component={TrangChu}
+        options={{
+          tabBarIcon: () => (
+            <Image style={{ width: 30, height: 30 }} source={require('./component/image/homeicon.png')} resizeMode="stretch" />
+
+          )
+        }}
+      />
+      <Tab.Screen name='DanhMuc' component={DanhMuc}
+        options={{
+          tabBarIcon: () => (
+            <Image style={{ width: 30, height: 30 }} source={require('./component/image/content.png')} resizeMode="stretch" />
+
+          )
+        }}
+      />
+      <Tab.Screen name='GioHang' component={GioHang}
+        options={{
+          tabBarIcon: () => (
+            <Image style={{ width: 30, height: 30 }} source={require('./component/image/shopping.png')} resizeMode="stretch" />
+
+          )
+        }}
+      />
+      <Tab.Screen name='ThongTin' component={ThongTin}
+        options={{
+          tabBarIcon: () => (
+            <Image style={{ width: 30, height: 30 }} source={require('./component/image/profile.png')} resizeMode="stretch" />
+
+          )
+        }}
+      />
+    </Tab.Navigator>
+  )
+
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+
+export default App = () => {
+  return (
+    <NavigationContainer>{/* Rest of your app code */}
+
+      <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Login" component={Login} />
+        {/* <Stack.Screen name="Main" component={Main}  />
+        <Stack.Screen name="Comment" component={Comment} /> */}
+        <Stack.Screen name="TrangChu" component={TrangChu} />
+        <Stack.Screen name='ThongTin' component={ThongTin} />
+        <Stack.Screen name='DanhMuc' component={DanhMuc} />
+        <Stack.Screen name='GioHang' component={GioHang} />
+        <Stack.Screen name='ChiTietSP' component={ChiTietSP} />
+        <Stack.Screen name='TabMenu' component={TabMenu} />
+      </Stack.Navigator>
+
+    </NavigationContainer>
+
+  )
+}
+
