@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import COLORS from './colors/colors';
 import { SecondaryButton } from './Button/Button';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+
 const ChiTietSP = ({ navigation, route }) => {
     const item = route.params;
     return (
@@ -44,7 +45,10 @@ const ChiTietSP = ({ navigation, route }) => {
                         Tối ưu điện năng - Sạc nhanh 20 W, đầy 50% pin trong khoảng 30 phút
                     </Text>
                     <View style={{ marginTop: 40, marginBottom: 40 }}>
-                        <SecondaryButton title="Add To Cart" />
+                        <SecondaryButton title="Add To Cart" 
+                         onPress={() => navigation.navigate('GioHang', item)}
+                        />
+                       
                     </View>
                 </View>
             </ScrollView>

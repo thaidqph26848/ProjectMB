@@ -1,100 +1,112 @@
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, ImageBackground, StatusBar, SafeAreaView } from 'react-native';
-import React, { useState } from 'react';
+import React from 'react';
+import { View, Text, Image, ScrollView, TouchableOpacity } from 'react-native';
 
-const ThongTin = ({ navigation }) => {
-    return (
-        <SafeAreaView style={{ flex: 1, }}>
-            <View style={styles.container}>
-                <Image source={require('./image/profile.png')}
-                    style={{ width: 350, height: 190, padding: 10, margin: 10 }} />
-                <Text>Đỗ Quóc Thái</Text>
-                <Text>
-                    Cp17309
-                </Text>
-                <Text>
-                    thaidqph26848@fpt.edu.vn
-                </Text>
-                <StatusBar style="auto" />
+const ProfileView = ({navigation}) => {
 
 
-            </View>
+  return (
+    <ScrollView style={styles.container}>
+      <View style={styles.headerContainer}>
+        <Image
+          style={styles.coverPhoto}
+          source={{uri: 'https://images.pexels.com/photos/1156684/pexels-photo-1156684.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'}}
+        />
+        <View style={styles.profileContainer}>
+          <Image
+            style={styles.profilePhoto}
+            source={{uri: 'https://www.bootdey.com/img/Content/avatar/avatar1.png'}}
+          />
+          <Text style={styles.nameText}>Thai</Text>
+        </View>
+      </View>
+      <View style={styles.statsContainer}>
+        <View style={styles.statContainer}>
+          <Text style={styles.statCount}>4</Text>
+          <Text style={styles.statLabel}>Bought</Text>
+        </View>
+        <View style={styles.statContainer}>
+          <Text style={styles.statCount}>10</Text>
+          <Text style={styles.statLabel}>Wishlists</Text>
+        </View>
+      </View>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('EditProfile')}>
+        <Text style={styles.buttonText}>Edit Profile</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button1} onPress={() => navigation.navigate('Login')}>
+        <Text style={styles.buttonText}>Log Out</Text>
+      </TouchableOpacity>
+    </ScrollView>
+  );
+};
 
-        </SafeAreaView>
+const styles = {
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  headerContainer: {
+    alignItems: 'center',
+  },
+  coverPhoto: {
+    width: '100%',
+    height: 200,
+  },
+  profileContainer: {
+    alignItems: 'center',
+    marginTop: -50,
+  },
+  profilePhoto: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+  },
+  nameText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 10,
+  },
+  bioContainer: {
+    padding: 15,
+  },
+  bioText: {
+    fontSize: 16,
+  },
+  statsContainer: {
+    flexDirection: 'row',
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  statContainer: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  statCount: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  statLabel: {
+    fontSize: 16,
+    color: '#999',
+  },
+  button: {
+    backgroundColor: '#0066cc',
+    borderRadius: 5,
+    padding: 10,
+    marginHorizontal: 20,
+    marginBottom:20
+  },
+  button1: {
+    backgroundColor: '#0066cc',
+    borderRadius: 5,
+    padding: 10,
+    marginHorizontal: 20,
 
-    )
-}
-export default ThongTin;
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 10,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    title: {
-        textAlign: 'center',
-        margin: 10,
-        padding: 10,
-        fontSize: 35,
-        color: '#fff'
-    },
-    textInput: {
-        padding: 5,
-        borderWidth: 1,
-        borderColor: '#fff',
-        borderRadius: 5,
-        width: "70%",
-        height: 45,
-        marginBottom: 20,
-        color: '#fff',
-        fontSize: 50
-    },
-    header: {
-        padding: 5,
+  },
+  buttonText: {
+    fontSize: 16,
+    color: '#fff',
+    textAlign: 'center',
+  },
+};
 
-
-
-        width: "100%",
-        height: 45,
-        marginBottom: 20,
-        fontSize: 100,
-        color: '#fff',
-        paddingRight: 45
-    },
-    password: {
-        padding: 5,
-        borderWidth: 1,
-        borderColor: '#fff',
-        borderRadius: 5,
-        width: "70%",
-        height: 45,
-        marginBottom: 20,
-        fontSize: 100,
-        color: '#fff',
-        paddingRight: 45
-    },
-    forgot_button: {
-        height: 30,
-        marginBottom: 30,
-        color: '#FFF'
-    },
-    loginBtn:
-    {
-        width: "80%",
-        borderRadius: 25,
-        height: 50,
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: 40,
-        backgroundColor: "#1d8bf1",
-    },
-    singup: {
-        color: '#1d8bf1',
-        textAlign: 'center',
-        fontWeight: 'bold',
-        fontSize: 14,
-        alignSelf: 'center',
-        padding: 10,
-        margin: 10
-    }
-})
+export default ProfileView;

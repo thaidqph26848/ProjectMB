@@ -11,6 +11,7 @@ import ThongTin from './component/ThongTin';
 import DanhMuc from './component/DanhMuc';
 import GioHang from './component/GioHang';
 import ChiTietSP from './component/ChiTietSP';
+import EditProfile from './component/EditProfile';
 
 
 
@@ -68,6 +69,7 @@ export default App = () => {
         <Stack.Screen name="Comment" component={Comment} /> */}
         <Stack.Screen name="TrangChu" component={TrangChu} />
         <Stack.Screen name='ThongTin' component={ThongTin} />
+        <Stack.Screen name='EditProfile' component={EditProfile} />
         <Stack.Screen name='DanhMuc' component={DanhMuc} />
         <Stack.Screen name='GioHang' component={GioHang} />
         <Stack.Screen name='ChiTietSP' component={ChiTietSP} />

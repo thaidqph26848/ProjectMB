@@ -5,3 +5,4 @@ const categories = [
     {id: '4', name: 'Vivo', image: require('../image/Vivo_logo_2019.svg.png')},
     {id: '5', name: 'Realme', image: require('../image/images.jpg')},
   ];
+  export default categories;
