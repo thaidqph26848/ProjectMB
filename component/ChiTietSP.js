@@ -1,115 +1,85 @@
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, ImageBackground, StatusBar, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, ImageBackground, StatusBar, SafeAreaView, ScrollView } from 'react-native';
 import React, { useState } from 'react';
-
-const ChiTietSP = ({ navigation }) => {
+import COLORS from './colors/colors';
+import { SecondaryButton } from './Button/Button';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+const ChiTietSP = ({ navigation, route }) => {
+    const item = route.params;
     return (
-        <ImageBackground style={{ height: '100%', width: '100%' }} source={require('./image/backgroung.png')} resizeMode='stretch' >
-            <View style={styles.header}>
-                <TouchableOpacity style={{ height: '100%', aspectRatio: 1, position: 'absolute', right: 0, width: 40, padding: 4, margin: 7 }}
-                >
-                    <Image style={{ width: '100%', height: '100%' }} source={require('./image/menu.png')} resizeMode="contain" />
-                </TouchableOpacity>
-                <TouchableOpacity style={{ height: '100%', aspectRatio: 1, position: 'relative', left: 0, width: 40, padding: 4, margin: 2 }}
-                    onPress={() => {
-                        navigation.navigate('DanhMuc')
-                    }}
-                >
-                    <Image style={{ width: '100%', height: '100%' }} source={require('./image/arrow.png')} resizeMode="contain" />
-                </TouchableOpacity>
+
+        <SafeAreaView style={{ backgroundColor: COLORS.white }}>
+            <View style={styles.container}>
+                <Icon name="arrow-back-ios" size={28} onPress={navigation.goBack} />
+                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Chi Tiet SP</Text>
+
             </View>
-            <StatusBar barStyle={"light-content"} />
-            <SafeAreaView style={{ flex: 1, }}>
-                <View style={styles.container}>
-                    <Image source={require('./image/profile.png')}
-                        style={{ width: 350, height: 190, padding: 10, margin: 10 }} />
-                    <Text>Đỗ Quóc Thái</Text>
-                    <Text>
-                        Cp17309
-                    </Text>
-                    <Text>
-                        thaidqph26848@fpt.edu.vn
-                    </Text>
-                    <StatusBar style="auto" />
-
-
+            <ScrollView showsVerticalScrollIndicator={false}>
+                <View
+                    style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: 280,
+                    }}>
+                    <Image source={item.image} style={{ height: 220, width: 220 }} />
                 </View>
+                <View style={styles.details}>
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                        }}>
+                        <Text
+                            style={{ fontSize: 25, fontWeight: 'bold', color: COLORS.white }}>
+                            {item.name}
+                        </Text>
+                        <View style={styles.iconContainer}>
+                            <Icon name="favorite-border" color={COLORS.primary} size={25} />
+                        </View>
+                    </View>
+                    <Text style={styles.detailsText}>
+                        Hiệu năng vượt trội - Chip Apple A15 Bionic mạnh mẽ, hỗ trợ mạng 5G tốc độ cao
+                        Không gian hiển thị sống động - Màn hình 6.1" Super Retina XDR độ sáng cao, sắc nét
+                        Trải nghiệm điện ảnh đỉnh cao - Camera kép 12MP, hỗ trợ ổn định hình ảnh quang học
+                        Tối ưu điện năng - Sạc nhanh 20 W, đầy 50% pin trong khoảng 30 phút
+                    </Text>
+                    <View style={{ marginTop: 40, marginBottom: 40 }}>
+                        <SecondaryButton title="Add To Cart" />
+                    </View>
+                </View>
+            </ScrollView>
+        </SafeAreaView>
 
-            </SafeAreaView>
-        </ImageBackground>
     )
 }
 export default ChiTietSP;
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        padding: 10,
+        paddingVertical: 20,
+        flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center'
+        marginHorizontal: 20,
     },
-    title: {
-        textAlign: 'center',
-        margin: 10,
-        padding: 10,
-        fontSize: 35,
-        color: '#fff'
+    details: {
+        paddingHorizontal: 20,
+        paddingTop: 40,
+        paddingBottom: 60,
+        backgroundColor: COLORS.primary,
+        borderTopRightRadius: 40,
+        borderTopLeftRadius: 40,
     },
-    textInput: {
-        padding: 5,
-        borderWidth: 1,
-        borderColor: '#fff',
-        borderRadius: 5,
-        width: "70%",
-        height: 45,
-        marginBottom: 20,
-        color: '#fff',
-        fontSize: 50
-    },
-    header: {
-        padding: 5,
-
-
-
-        width: "100%",
-        height: 45,
-        marginBottom: 20,
-        fontSize: 100,
-        color: '#fff',
-        paddingRight: 45
-    },
-    password: {
-        padding: 5,
-        borderWidth: 1,
-        borderColor: '#fff',
-        borderRadius: 5,
-        width: "70%",
-        height: 45,
-        marginBottom: 20,
-        fontSize: 100,
-        color: '#fff',
-        paddingRight: 45
-    },
-    forgot_button: {
-        height: 30,
-        marginBottom: 30,
-        color: '#FFF'
-    },
-    loginBtn:
-    {
-        width: "80%",
-        borderRadius: 25,
+    iconContainer: {
+        backgroundColor: COLORS.white,
         height: 50,
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: 40,
-        backgroundColor: "#1d8bf1",
+        width: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 30,
     },
-    singup: {
-        color: '#1d8bf1',
-        textAlign: 'center',
-        fontWeight: 'bold',
-        fontSize: 14,
-        alignSelf: 'center',
-        padding: 10,
-        margin: 10
-    }
+    detailsText: {
+        marginTop: 10,
+        lineHeight: 22,
+        fontSize: 16,
+        color: COLORS.white,
+    },
 })

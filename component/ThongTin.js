@@ -3,39 +3,24 @@ import React, { useState } from 'react';
 
 const ThongTin = ({ navigation }) => {
     return (
-        <ImageBackground style={{ height: '100%', width: '100%' }} source={require('./image/backgroung.png')} resizeMode='stretch' >
-            {/* <View style={styles.header}>
-        <TouchableOpacity style={{ height: '100%', aspectRatio: 1, position: 'absolute', right: 0, width: 40, padding: 4, margin: 7 }}
-        >
-          <Image style={{ width: '100%', height: '100%' }} source={require('./image/menu.png')} resizeMode="contain" />
-        </TouchableOpacity>
-        <TouchableOpacity style={{ height: '100%', aspectRatio: 1, position: 'relative', left: 0, width: 40, padding: 4, margin: 2 }}
-          onPress={() => {
-            navigation.navigate('Setting')
-          }}
-        >
-          <Image style={{ width: '100%', height: '100%' }} source={require('./image/arrow.png')} resizeMode="contain" />
-        </TouchableOpacity>
-      </View> */}
-            <StatusBar barStyle={"light-content"} />
-            <SafeAreaView style={{ flex: 1, }}>
-                <View style={styles.container}>
-                    <Image source={require('./image/profile.png')}
-                        style={{ width: 350, height: 190, padding: 10, margin: 10 }} />
-                    <Text>Đỗ Quóc Thái</Text>
-                    <Text>
-                        Cp17309
-                    </Text>
-                    <Text>
-                        thaidqph26848@fpt.edu.vn
-                    </Text>
-                    <StatusBar style="auto" />
+        <SafeAreaView style={{ flex: 1, }}>
+            <View style={styles.container}>
+                <Image source={require('./image/profile.png')}
+                    style={{ width: 350, height: 190, padding: 10, margin: 10 }} />
+                <Text>Đỗ Quóc Thái</Text>
+                <Text>
+                    Cp17309
+                </Text>
+                <Text>
+                    thaidqph26848@fpt.edu.vn
+                </Text>
+                <StatusBar style="auto" />
 
 
-                </View>
+            </View>
 
-            </SafeAreaView>
-        </ImageBackground>
+        </SafeAreaView>
+
     )
 }
 export default ThongTin;
