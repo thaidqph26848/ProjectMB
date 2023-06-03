@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Image, ScrollView, TouchableOpacity } from 'react-native';
 
-const ProfileView = ({navigation}) => {
+const ProfileView = ({ navigation }) => {
 
 
   return (
@@ -9,12 +9,12 @@ const ProfileView = ({navigation}) => {
       <View style={styles.headerContainer}>
         <Image
           style={styles.coverPhoto}
-          source={{uri: 'https://images.pexels.com/photos/1156684/pexels-photo-1156684.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'}}
+          source={{ uri: 'https://images.pexels.com/photos/1156684/pexels-photo-1156684.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' }}
         />
         <View style={styles.profileContainer}>
           <Image
             style={styles.profilePhoto}
-            source={{uri: 'https://www.bootdey.com/img/Content/avatar/avatar1.png'}}
+            source={{ uri: 'https://www.bootdey.com/img/Content/avatar/avatar1.png' }}
           />
           <Text style={styles.nameText}>Thai</Text>
         </View>
@@ -32,9 +32,16 @@ const ProfileView = ({navigation}) => {
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('EditProfile')}>
         <Text style={styles.buttonText}>Edit Profile</Text>
       </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Add')}>
+        <Text style={styles.buttonText}>Manage</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('')}>
+        <Text style={styles.buttonText}>Statistical</Text>
+      </TouchableOpacity>
       <TouchableOpacity style={styles.button1} onPress={() => navigation.navigate('Login')}>
         <Text style={styles.buttonText}>Log Out</Text>
       </TouchableOpacity>
+
     </ScrollView>
   );
 };
@@ -93,7 +100,7 @@ const styles = {
     borderRadius: 5,
     padding: 10,
     marginHorizontal: 20,
-    marginBottom:20
+    marginBottom: 20
   },
   button1: {
     backgroundColor: '#0066cc',

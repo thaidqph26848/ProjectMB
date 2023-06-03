@@ -8,10 +8,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Login from './component/Login';
 import TrangChu from './component/TrangChu';
 import ThongTin from './component/ThongTin';
-import DanhMuc from './component/DanhMuc';
 import GioHang from './component/GioHang';
 import ChiTietSP from './component/ChiTietSP';
 import EditProfile from './component/EditProfile';
+import Add from './component/Add';
 
 
 
@@ -25,14 +25,6 @@ const TabMenu = () => {
         options={{
           tabBarIcon: () => (
             <Image style={{ width: 30, height: 30 }} source={require('./component/image/homeicon.png')} resizeMode="stretch" />
-
-          )
-        }}
-      />
-      <Tab.Screen name='DanhMuc' component={DanhMuc}
-        options={{
-          tabBarIcon: () => (
-            <Image style={{ width: 30, height: 30 }} source={require('./component/image/content.png')} resizeMode="stretch" />
 
           )
         }}
@@ -70,10 +62,11 @@ export default App = () => {
         <Stack.Screen name="TrangChu" component={TrangChu} />
         <Stack.Screen name='ThongTin' component={ThongTin} />
         <Stack.Screen name='EditProfile' component={EditProfile} />
-        <Stack.Screen name='DanhMuc' component={DanhMuc} />
         <Stack.Screen name='GioHang' component={GioHang} />
         <Stack.Screen name='ChiTietSP' component={ChiTietSP} />
         <Stack.Screen name='TabMenu' component={TabMenu} />
+        <Stack.Screen name='Add' component={Add} />
+      
       </Stack.Navigator>
 
     </NavigationContainer>
