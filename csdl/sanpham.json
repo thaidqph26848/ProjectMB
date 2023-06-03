@@ -1,0 +1,18 @@
+{
+  "sanpham": [
+    {
+      "id": 1,
+      "ten_sp": "Iphone 13",
+      "hang": "Apple",
+      "gia": "8.20",
+      "image": "https://cdn11.dienmaycholon.vn/filewebdmclnew/DMCL21/Picture//Apro/Apro_product_27017/iphone-13-128gb_main_984_1020.png.webp"
+    },
+    {
+      "id": 2,
+      "ten_sp": "SamSung Zlip4",
+      "hang": "SamSung",
+      "gia": "9.00",
+      "image": "https://cdn.tgdd.vn/Products/Images/42/258047/samsung-galaxy-z-flip4-5g-128gb-thumb-tim-600x600.jpg"
+    }
+  ]
+}

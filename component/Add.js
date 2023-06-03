@@ -64,7 +64,7 @@ const Add = ({ navigation }) => {
                             <Icon name="edit" size={20} color={COLORS.white} onPress={() => { setshowModalDialog2(true) }} />
                         </View>
                         <View style={styles.addToCartBtn}>
-                            <Icon name="delete" size={20} color={COLORS.white} onPress={createTwoButtonAlert}/>
+                            <Icon name="delete" size={20} color={COLORS.white} onPress={createTwoButtonAlert} />
                         </View>
                     </View>
                 </View>
@@ -96,18 +96,19 @@ const Add = ({ navigation }) => {
         }
     }
     const createTwoButtonAlert = () =>
-    Alert.alert('Xoa sp', 'Ban co muon xoa ', [
-      {
-        text: 'Cancel',
-        onPress: () => console.log('Cancel Pressed'),
-        style: 'cancel',
-      },
-      {text: 'OK', onPress: () => console.log('OK Pressed')},
-    ]);
+        Alert.alert('Xoa sp', 'Ban co muon xoa ', [
+            {
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+            },
+            { text: 'OK', onPress: () => console.log('OK Pressed') },
+        ]);
     return (
         <SafeAreaView style={{ flex: 1, }}>
             <View style={styles.container}>
                 <Icon name="arrow-back-ios" size={28} onPress={navigation.goBack} />
+                <Text style={{fontSize:20,marginRight:300}}>Back</Text>
             </View>
             <View style={{
                 marginTop: 40,
@@ -130,7 +131,10 @@ const Add = ({ navigation }) => {
             <View>
                 <Modal visible={showModalDialog}>
                     <View style={styles.container}>
-                        <Icon name="arrow-back-ios" size={28} onPress={navigation.goBack} />
+                        <Icon name="arrow-back-ios" size={28} onPress={() => {
+                            setshowModalDialog(false)
+                        }} />
+                        <Text style={{ fontSize: 20, marginRight: 300 }}>Back</Text>
                     </View>
                     <View style={styles.Khung_dialog}>
                         <Text>Thêm San Pham</Text>
@@ -170,7 +174,10 @@ const Add = ({ navigation }) => {
                 <View>
                     <Modal visible={showModalDialog2}>
                         <View style={styles.container}>
-                            <Icon name="arrow-back-ios" size={28} onPress={navigation.goBack} />
+                            <Icon name="arrow-back-ios" size={28} onPress={() => {
+                                setshowModalDialog2(false)
+                            }} />
+                            <Text style={{ fontSize: 20, marginRight: 300 }}>Back</Text>
                         </View>
                         <View style={styles.Khung_dialog}>
                             <Text>Sua San Pham</Text>
@@ -205,7 +212,6 @@ const Add = ({ navigation }) => {
                         </View>
                     </Modal>
                 </View>
-
             </View>
             <FlatList
                 showsVerticalScrollIndicator={false}

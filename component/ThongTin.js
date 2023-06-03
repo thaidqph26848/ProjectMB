@@ -35,7 +35,7 @@ const ProfileView = ({ navigation }) => {
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Add')}>
         <Text style={styles.buttonText}>Manage</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('')}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')}>
         <Text style={styles.buttonText}>Statistical</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button1} onPress={() => navigation.navigate('Login')}>
