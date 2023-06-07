@@ -15,14 +15,14 @@ import DropDownPicker from 'react-native-dropdown-picker';
 const { width } = Dimensions.get('screen');
 const cardWidth = width / 2 - 20;
 var dem = 0;
-
+const URL = "http://192.168.1.6:3000/api/sp";
 const Add = ({ navigation }) => {
-    const [name, setname] = useState('')
-    const [price, setprice] = useState('')
-    const [image, setimage] = useState([])
-    const [hang, sethang] = useState()
-    const [mobile, setMobile] = useState([])
-    const [id, setid] = useState();
+    const [isLoading, setLoading] = useState(true);
+    const [data, setData] = useState([]);
+    const [name, setname] = useState('');
+    const [brand, setbrand] = useState()
+    const [price, setprice] = useState()
+    const [image, setimage] = useState()
 
     const [showModalDialog, setshowModalDialog] = useState(false);
     const [showModalDialog2, setshowModalDialog2] = useState(false);
@@ -35,19 +35,77 @@ const Add = ({ navigation }) => {
     const [value, setValue] = useState(null);
     const [items, setItems] = useState([]);
 
-    const Card = ({ food }) => {
+    const reloadData = React.useCallback(
+        () => {
+            setreloading(true);
+            //load lai du lieu
+            dem++;
+            setcounter(dem);
+            setTimeout(() => {
+                setreloading(false);
+            }, 2000);
+        }
+    );
+    const getData = () => {
+        fetch(URL)
+            .then((response) => response.json()) // get response, convert to json
+            .then((json) => {
+                setData(json.data);
+                setname(json.name);
+                setprice(json.price);
+                setbrand(json.brand);
+                setimage(json.image)
+            })
+            .catch((error) => alert(error)) // display errors
+            .finally(() => setLoading(false)); // change loading state
+    }
+
+
+    const Card = ({ item }) => {
+
+
+        const createTwoButtonAlert = () =>
+            Alert.alert('Xoa sp', "Xóa san pham: " + item.name, [
+                {
+                    text: 'cancel',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel',
+                },
+                {
+                    text: 'OK', onPress: () => {
+
+                        let url_pro = "http://192.168.1.6:3000/api/sp/" + item._id;
+
+                        fetch(url_pro, {
+                            method: 'DELETE'
+                        })
+                            .then(response => {
+                                if (response = 200) {
+                                    getData();
+                                    alert("Xóa thành công")
+                                }
+                            })
+                            .catch((err) => {
+                                console.log(err)
+                            });
+
+                    },
+                },
+            ]);
+
         return (
             <TouchableHighlight
                 underlayColor={COLORS.white}
                 activeOpacity={0.9}>
                 <View style={styles.card}>
                     <View style={{ alignItems: 'center', marginBottom: 10, marginTop: 5 }}>
-                        <Image source={food.image} style={{ height: 90, width: 100 }} />
+                        <Image style={{ height: 100, width: 100 }}
+                            source={{ uri: `${item.image}` }} />
                     </View>
                     <View style={{ marginHorizontal: 20 }}>
-                        <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{food.name}</Text>
+                        <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{item.name}</Text>
                         <Text style={{ fontSize: 14, color: COLORS.grey, marginTop: 2 }}>
-                            {food.brand}
+                            {item.brand}
                         </Text>
                     </View>
                     <View
@@ -58,7 +116,7 @@ const Add = ({ navigation }) => {
                             justifyContent: 'space-between',
                         }}>
                         <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
-                            ${food.price}
+                            ${item.price}
                         </Text>
                         <View style={styles.addToCartBtn}>
                             <Icon name="edit" size={20} color={COLORS.white} onPress={() => { setshowModalDialog2(true) }} />
@@ -71,6 +129,9 @@ const Add = ({ navigation }) => {
             </TouchableHighlight>
         );
     };
+    useEffect(() => {
+        getData();
+    }, []);
     const pickImage = async () => {
 
         // Đọc ảnh từ thư viện thì không cần khai báo quyền
@@ -95,20 +156,12 @@ const Add = ({ navigation }) => {
                 });
         }
     }
-    const createTwoButtonAlert = () =>
-        Alert.alert('Xoa sp', 'Ban co muon xoa ', [
-            {
-                text: 'Cancel',
-                onPress: () => console.log('Cancel Pressed'),
-                style: 'cancel',
-            },
-            { text: 'OK', onPress: () => console.log('OK Pressed') },
-        ]);
+
     return (
         <SafeAreaView style={{ flex: 1, }}>
             <View style={styles.container}>
                 <Icon name="arrow-back-ios" size={28} onPress={navigation.goBack} />
-                <Text style={{fontSize:20,marginRight:300}}>Back</Text>
+                <Text style={{ fontSize: 20, marginRight: 350 }}>Back</Text>
             </View>
             <View style={{
                 marginTop: 40,
@@ -214,10 +267,10 @@ const Add = ({ navigation }) => {
                 </View>
             </View>
             <FlatList
+                data={data}
                 showsVerticalScrollIndicator={false}
                 numColumns={2}
-                data={foods}
-                renderItem={({ item }) => <Card food={item} />}
+                renderItem={({ item }) => <Card item={item} />}
             />
         </SafeAreaView>
     )

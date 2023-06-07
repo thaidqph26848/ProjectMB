@@ -7,91 +7,54 @@ import categories from './Category/categories';
 import foods from './Category/datatmp';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
-
-import { initializeApp } from 'firebase/app';
-
-// Optionally import the services that you want to use
-import { } from "firebase/auth";
-import { } from "firebase/database";
-import { } from "firebase/firestore";
-import { } from "firebase/functions";
-import { } from "firebase/storage";
 const { width } = Dimensions.get('screen');
 const cardWidth = width / 2 - 20;
 var dem = 0;
+const URL = "http://192.168.1.6:3000/api/sp";
+
 const TrangChu = ({ navigation }) => {
-    const [name, setname] = useState()
+    const [isLoading, setLoading] = useState(true);
+    const [data, setData] = useState([]);
+    const [name, setname] = useState('');
+    const [brand, setbrand] = useState()
     const [price, setprice] = useState()
-    const [image, setimage] = useState([])
-    const [hang, sethang] = useState()
-    const [mobile, setMobile] = useState([])
+    const [image, setimage] = useState()
 
     const [counter, setcounter] = useState(dem);
     const [reloading, setreloading] = useState(false);
-    const [img_source, setimg_source] = useState(null)
-    const [img_base64, setiimg_base64] = useState(null)
-    const [id, setid] = useState();
+    const [_id, set_id] = useState(null);
     const [selectedCategoryIndex, setSelectedCategoryIndex] = React.useState(0);
 
 
 
-    const ListCategories = () => {
-        return (
-            <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.categoriesListContainer}>
-                {categories.map((category, index) => (
-                    <TouchableOpacity
-                        key={index}
-                        activeOpacity={0.8}
-                        onPress={() => setSelectedCategoryIndex(index)}>
-                        <View
-                            style={{
-                                backgroundColor:
-                                    selectedCategoryIndex == index
-                                        ? COLORS.primary
-                                        : COLORS.secondary,
-                                ...styles.categoryBtn,
-                            }}>
-                            <View style={styles.categoryBtnImgCon}>
-                                <Image
-                                    source={category.image}
-                                    style={{ height: 35, width: 35, borderRadius: 30, resizeMode: 'contain' }}
-                                />
-                            </View>
-                            <Text
-                                style={{
-                                    fontSize: 15,
-                                    fontWeight: 'bold',
-                                    marginLeft: 10,
-                                    color:
-                                        selectedCategoryIndex == index
-                                            ? COLORS.white
-                                            : COLORS.primary,
-                                }}>
-                                {category.name}
-                            </Text>
-                        </View>
-                    </TouchableOpacity>
-                ))}
-            </ScrollView>
-        );
-    };
-    const Card = ({ food }) => {
+    useEffect(() => {
+        fetch(URL)
+            .then((response) => response.json()) // get response, convert to json
+            .then((json) => {
+                setData(json.data);
+                setname(json.name);
+                setprice(json.price);
+                setbrand(json.brand);
+                setimage(json.image)
+            })
+            .catch((error) => alert(error)) // display errors
+            .finally(() => setLoading(false)); // change loading state
+    }, []);
+    const Card = ({ item }) => {
         return (
             <TouchableHighlight
                 underlayColor={COLORS.white}
                 activeOpacity={0.9}
-                onPress={() => navigation.navigate('ChiTietSP', food)}>
+                onPress={() => navigation.navigate('ChiTietSP', item)}>
                 <View style={styles.card}>
                     <View style={{ alignItems: 'center', marginBottom: 10, marginTop: 5 }}>
-                        <Image source={food.image} style={{ height: 90, width: 100 }} />
+                        <Image style={{ height: 100, width: 100 }}
+                            source={{ uri: `${item.image}` }} />
                     </View>
                     <View style={{ marginHorizontal: 20 }}>
-                        <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{food.name}</Text>
+                        <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{item.name}</Text>
                         <Text style={{ fontSize: 14, color: COLORS.grey, marginTop: 2 }}>
-                            {food.brand}
+                            {item.brand}
                         </Text>
                     </View>
                     <View
@@ -102,7 +65,7 @@ const TrangChu = ({ navigation }) => {
                             justifyContent: 'space-between',
                         }}>
                         <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
-                            ${food.price}
+                            ${item.price}
                         </Text>
                         <View style={styles.addToCartBtn}>
                             <Icon name="add" size={20} color={COLORS.white} />
@@ -112,25 +75,6 @@ const TrangChu = ({ navigation }) => {
             </TouchableHighlight>
         );
     };
-    useEffect(() => {
-        const firebaseConfig = {
-            apiKey: "AIzaSyAOSduxgZW5kx6zfkUcFSHAwhuZTa3-mhY",
-            authDomain: "quan-ly-app-ban-dien-thoai.firebaseapp.com",
-            databaseURL: "https://quan-ly-app-ban-dien-thoai-default-rtdb.firebaseio.com",
-            projectId: "quan-ly-app-ban-dien-thoai",
-            storageBucket: "quan-ly-app-ban-dien-thoai.appspot.com",
-            messagingSenderId: "712534616574",
-            appId: "1:712534616574:web:2b2f154a5c0eafbe2038af",
-            measurementId: "G-YR26KHFBKV"
-        };
-
-        if (!initializeApp.length) {
-            // Initialize Firebase
-            initializeApp.initializeApp(firebaseConfig);
-            console.log("\nKết nối firebase thành công\n")
-        }
-
-    })
     return (
         <SafeAreaView style={{ flex: 1, }}>
             <View style={styles.container}>
@@ -146,9 +90,7 @@ const TrangChu = ({ navigation }) => {
                 >
                     <Image source={require('./image/profile.png')}
                         style={{ height: 50, width: 50, borderRadius: 25 }}
-
                     />
-
                 </TouchableOpacity>
 
             </View>
@@ -165,13 +107,13 @@ const TrangChu = ({ navigation }) => {
                     <Icon name='tune' size={28} color={COLORS.white} />
                 </View>
             </View>
-            <ListCategories />
             <FlatList
+                data={data}
                 showsVerticalScrollIndicator={false}
                 numColumns={2}
-                data={foods}
-                renderItem={({ item }) => <Card food={item} />}
+                renderItem={({ item }) => <Card item={item} />}
             />
+
         </SafeAreaView>
     )
 }
@@ -224,7 +166,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     card: {
-        height: 220,
+        height: 230,
         width: cardWidth,
         marginHorizontal: 10,
         marginBottom: 20,

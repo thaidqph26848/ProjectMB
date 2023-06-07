@@ -21,7 +21,8 @@ const ChiTietSP = ({ navigation, route }) => {
                         alignItems: 'center',
                         height: 280,
                     }}>
-                    <Image source={item.image} style={{ height: 220, width: 220 }} />
+                    <Image style={{ height: 220, width: 220 }}
+                        source={{ uri: `${item.image}` }} />
                 </View>
                 <View style={styles.details}>
                     <View
@@ -30,10 +31,21 @@ const ChiTietSP = ({ navigation, route }) => {
                             justifyContent: 'space-between',
                             alignItems: 'center',
                         }}>
-                        <Text
-                            style={{ fontSize: 25, fontWeight: 'bold', color: COLORS.white }}>
-                            {item.name}
-                        </Text>
+                        <View>
+                            <Text
+                                style={{ fontSize: 25, fontWeight: 'bold', color: COLORS.white }}>
+                                Ten: {item.name}
+                            </Text>
+                            <Text
+                                style={{ fontSize: 25, fontWeight: 'bold', color: COLORS.white }}>
+                                Gia: {item.price}$
+                            </Text>
+                            <Text
+                                style={{ fontSize: 25, fontWeight: 'bold', color: COLORS.white }}>
+                                Hang: {item.brand}
+                            </Text>
+                        </View>
+
                         <View style={styles.iconContainer}>
                             <Icon name="favorite-border" color={COLORS.primary} size={25} />
                         </View>
@@ -45,10 +57,10 @@ const ChiTietSP = ({ navigation, route }) => {
                         Tối ưu điện năng - Sạc nhanh 20 W, đầy 50% pin trong khoảng 30 phút
                     </Text>
                     <View style={{ marginTop: 40, marginBottom: 40 }}>
-                        <SecondaryButton title="Add To Cart" 
-                         onPress={() => navigation.navigate('GioHang', item)}
+                        <SecondaryButton title="Add To Cart"
+                            onPress={() => navigation.navigate('GioHang', item)}
                         />
-                       
+
                     </View>
                 </View>
             </ScrollView>
