@@ -12,7 +12,7 @@ import GioHang from './component/GioHang';
 import ChiTietSP from './component/ChiTietSP';
 import EditProfile from './component/EditProfile';
 import Add from './component/Add';
-
+import Register from './component/Register';
 
 
 const Stack = createNativeStackNavigator();
@@ -66,7 +66,7 @@ export default App = () => {
         <Stack.Screen name='ChiTietSP' component={ChiTietSP} />
         <Stack.Screen name='TabMenu' component={TabMenu} />
         <Stack.Screen name='Add' component={Add} />
-      
+        <Stack.Screen name='Register' component={Register} />
       </Stack.Navigator>
 
     </NavigationContainer>
