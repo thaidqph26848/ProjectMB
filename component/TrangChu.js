@@ -1,45 +1,84 @@
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, ImageBackground, StatusBar, SafeAreaView, Button, ScrollView, FlatList, TouchableHighlight, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, ImageBackground, StatusBar,RefreshControl, SafeAreaView, Button, ScrollView, FlatList, TouchableHighlight, Dimensions } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import COLORS from './colors/colors';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import categories from './Category/categories';
-import foods from './Category/datatmp';
-import * as ImagePicker from 'expo-image-picker';
-import * as FileSystem from 'expo-file-system';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const { width } = Dimensions.get('screen');
 const cardWidth = width / 2 - 20;
+let strKey = 'loginInfo'
 var dem = 0;
-const URL = "http://192.168.1.6:3000/api/sp";
+let URL = "http://192.168.1.22:3000/sanpham";
 
 const TrangChu = ({ navigation }) => {
     const [isLoading, setLoading] = useState(true);
-    const [data, setData] = useState([]);
-    const [name, setname] = useState('');
-    const [brand, setbrand] = useState()
-    const [price, setprice] = useState()
+    const [sanpham, setsanpham] = useState([]);
+    const [ten_sp, setten_sp] = useState('');
+    const [hang, sethang] = useState('');
+    const [gia, setgia] = useState('');
     const [image, setimage] = useState()
+
+    const [fullname, setfullname] = useState("");
+    const [avatar, setAvatar] = useState(null)
+    const [id, setid] = useState('')
+    const [username, setusername] = useState(null);
+    const [password, setPassword] = useState(null)
 
     const [counter, setcounter] = useState(dem);
     const [reloading, setreloading] = useState(false);
-    const [_id, set_id] = useState(null);
     const [selectedCategoryIndex, setSelectedCategoryIndex] = React.useState(0);
 
+    const reloadData = React.useCallback(
+        () => {
+            setreloading(true);
+            //load lai du lieu
+            dem++;
+            setcounter(dem);
+            setTimeout(() => {
+                setreloading(false);
+            }, 2000);
+        }
+    );
+
+    const getData = async () => {
+
+        try {
+            const value = await AsyncStorage.getItem(strKey)
+            if (value !== null) {
+                // lấy được dữ liệu:
+                let obj = JSON.parse(value)
+                setAvatar(obj.avatar)
+                setfullname(obj.fullname)
+                setid(obj.id)
+                setusername(obj.username)
+                setPassword(obj.password)
 
 
-    useEffect(() => {
+            }
+        } catch (e) {
+            // error reading value
+            console.log(e);
+        }
+
+    }
+
+    const getSP = async () => {
         fetch(URL)
-            .then((response) => response.json()) // get response, convert to json
-            .then((json) => {
-                setData(json.data);
-                setname(json.name);
-                setprice(json.price);
-                setbrand(json.brand);
-                setimage(json.image)
+            .then((res) => {
+                return res.json();
             })
-            .catch((error) => alert(error)) // display errors
-            .finally(() => setLoading(false)); // change loading state
-    }, []);
+            .then(async (res_json) => {
+                try {
+                    const response = await fetch(URL);
+                    const jsonPost = await response.json();
+
+                    setsanpham(jsonPost);
+                } catch (e) {
+                    console.log(e);
+                }
+            })
+    }
+
     const Card = ({ item }) => {
         return (
             <TouchableHighlight
@@ -52,9 +91,9 @@ const TrangChu = ({ navigation }) => {
                             source={{ uri: `${item.image}` }} />
                     </View>
                     <View style={{ marginHorizontal: 20 }}>
-                        <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{item.name}</Text>
+                        <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{item.ten_sp}</Text>
                         <Text style={{ fontSize: 14, color: COLORS.grey, marginTop: 2 }}>
-                            {item.brand}
+                            {item.hang}
                         </Text>
                     </View>
                     <View
@@ -65,7 +104,7 @@ const TrangChu = ({ navigation }) => {
                             justifyContent: 'space-between',
                         }}>
                         <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
-                            ${item.price}
+                            ${item.gia}
                         </Text>
                         <View style={styles.addToCartBtn}>
                             <Icon name="add" size={20} color={COLORS.white} />
@@ -75,22 +114,25 @@ const TrangChu = ({ navigation }) => {
             </TouchableHighlight>
         );
     };
+    useEffect(() => {
+        getData();
+        getSP();
+    }, []);
     return (
         <SafeAreaView style={{ flex: 1, }}>
             <View style={styles.container}>
                 <View>
                     <View style={{ flexDirection: 'row' }}>
-                        <Text style={{ fontSize: 28 }}>Hello,</Text>
-                        <Text style={{ fontSize: 28, fontWeight: 'bold', marginLeft: 10 }}>Thai</Text>
+                        <Text style={{ fontSize: 28 }}>Hello, </Text>
+                        <Text style={{ fontSize: 28, fontWeight: 'bold', marginLeft: 10 }}>{fullname}</Text>
                     </View>
                     <Text style={{ marginTop: 5, fontSize: 22, color: COLORS.grey }}>What do you want to buy? </Text>
                 </View>
                 <TouchableOpacity
                     onPress={() => navigation.navigate('ThongTin')}
                 >
-                    <Image source={require('./image/profile.png')}
-                        style={{ height: 50, width: 50, borderRadius: 25 }}
-                    />
+                   <Image source={{ uri: avatar }} 
+                    style={{ height: 50, width: 50, borderRadius: 25 }}/>
                 </TouchableOpacity>
 
             </View>
@@ -107,12 +149,19 @@ const TrangChu = ({ navigation }) => {
                     <Icon name='tune' size={28} color={COLORS.white} />
                 </View>
             </View>
-            <FlatList
-                data={data}
-                showsVerticalScrollIndicator={false}
-                numColumns={2}
-                renderItem={({ item }) => <Card item={item} />}
-            />
+            <ScrollView refreshControl={
+                <RefreshControl refreshing={reloading}
+                    onRefresh={reloadData} />
+            }>
+                <SafeAreaView style={{ flex: 1, }}>
+                    <View >
+                        <FlatList data={sanpham}
+                            keyExtractor={(item) => { return item.id }}
+                            numColumns={2}
+                            renderItem={Card} style={{ marginBottom: 10 }} />
+                    </View>
+                </SafeAreaView>
+            </ScrollView>
 
         </SafeAreaView>
     )

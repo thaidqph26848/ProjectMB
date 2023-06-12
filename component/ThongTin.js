@@ -1,9 +1,108 @@
 import React from 'react';
-import { View, Text, Image, ScrollView, TouchableOpacity } from 'react-native';
-
+import { View, Text, Image, ScrollView, TouchableOpacity, useEffect } from 'react-native';
+import { useState } from 'react';
+import Icon from 'react-native-vector-icons/FontAwesome5'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as ImagePicker from 'expo-image-picker'
+import * as FileSystem from 'expo-file-system'
+let strKey = 'loginInfo'
 const ProfileView = ({ navigation }) => {
+  const [fullname, setfullname] = useState("");
+  const [avatar, setAvatar] = useState(null)
+  const [id, setid] = useState('')
+  const [username, setusername] = useState(null);
+  const [password, setPassword] = useState(null)
+  const [sanpham, setsanpham] = useState([]);
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem(strKey)
+      if (value !== null) {
+        // lấy được dữ liệu:
+        let obj = JSON.parse(value)
+        setAvatar(obj.avatar)
+        setfullname(obj.fullname)
+        setid(obj.id)
+        setusername(obj.username)
+        setPassword(obj.password)
+
+        
+      }
+    } catch (e) {
+      // error reading value
+      console.log(e);
+    }
+
+  }
+  const pickImage = async () => {
+
+    // Đọc ảnh từ thư viện thì không cần khai báo quyền
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3], // khung view cắt ảnh 
+      quality: 1,
+    });
 
 
+    console.log(result);
+
+
+    if (!result.canceled) {
+      // chuyển ảnh thành base64 để upload lên json
+      let _uri = result.assets[0].uri;  // địa chỉ file ảnh đã chọn
+      let file_ext = _uri.substring(_uri.lastIndexOf('.') + 1); // lấy đuôi file
+
+
+      FileSystem.readAsStringAsync(_uri, { encoding: 'base64' })
+        .then((res) => {
+          // phải nối chuỗi với tiền tố data image
+          setAvatar('data:image/' + file_ext + ';base64,' + res)
+          console.log(avatar);
+          // upload ảnh lên api thì dùng PUT có thể viết ở đây
+          updateUser()
+        });
+    }
+  }
+
+  const updateUser = () => {
+    let url_user = 'http://192.168.1.22:3000/users/' + id;
+    let objUser = {
+      username: username,
+      password: password,
+      fullname: fullname,
+      avatar: avatar,
+      id: id
+    }
+
+    fetch(url_user, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(objUser),
+    })
+      .then(async (res) => {
+        if (res.status == 200) {
+          try {
+            console.log(objUser);
+            await AsyncStorage.setItem(strKey, JSON.stringify(objUser))
+            console.log('update anh thanh cong')
+          } catch (error) {
+            console.log(error);
+          }
+        }
+
+      })
+      .catch((ex) => {
+        console.log(ex);
+      });
+  }
+
+  React.useEffect(() => {
+    getData()
+})
   return (
     <ScrollView style={styles.container}>
       <View style={styles.headerContainer}>
@@ -12,11 +111,17 @@ const ProfileView = ({ navigation }) => {
           source={{ uri: 'https://images.pexels.com/photos/1156684/pexels-photo-1156684.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' }}
         />
         <View style={styles.profileContainer}>
-          <Image
-            style={styles.profilePhoto}
-            source={{ uri: 'https://www.bootdey.com/img/Content/avatar/avatar1.png' }}
-          />
-          <Text style={styles.nameText}>Thai</Text>
+
+          <TouchableOpacity onPress={pickImage}>
+            {
+              avatar ? (
+                <Image source={{ uri: avatar }} style={styles.profilePhoto} />
+              ) : (
+                <Image source={require('./image/user.png')} style={styles.profilePhoto} />
+              )
+            }
+          </TouchableOpacity>
+          <Text style={styles.nameText}>{fullname}</Text>
         </View>
       </View>
       <View style={styles.statsContainer}>
@@ -41,7 +146,6 @@ const ProfileView = ({ navigation }) => {
       <TouchableOpacity style={styles.button1} onPress={() => navigation.navigate('Login')}>
         <Text style={styles.buttonText}>Log Out</Text>
       </TouchableOpacity>
-
     </ScrollView>
   );
 };
@@ -114,6 +218,19 @@ const styles = {
     color: '#fff',
     textAlign: 'center',
   },
+  editBtn: {
+    position: 'absolute',
+    bottom: 0,
+    backgroundColor: 'rgba(52, 52, 52, 0.5)',
+    marginTop: -18,
+    textAlign: 'center',
+    right: 0,
+    borderRadius: 50,
+    padding: 6,
+    color: 'white'
+},
 };
 
 export default ProfileView;
+
+
