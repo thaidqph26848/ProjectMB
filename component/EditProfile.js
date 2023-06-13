@@ -108,7 +108,7 @@ const EditProfile = ({navigation}) => {
                   avatar ? (
                     <Image source={{ uri: avatar }} style={styles.avatar} />
                   ) : (
-                    <Image source={require('./image/user.png')} style={styles.avatar} />
+                    <Image source={require('./image/user.jpg')} style={styles.avatar} />
                   )
                 }
               </TouchableOpacity> 

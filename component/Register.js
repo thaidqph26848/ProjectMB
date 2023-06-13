@@ -41,7 +41,7 @@ const Register = ({ navigation }) => {
     }
   }
   const addUser = () => {
-    let url_login = 'http://192.168.1.22:3000/user?username=' + username;
+    let url_login = 'http://172.19.200.210:3000/user?username=' + username;
 
     fetch(url_login, {
       method: 'POST',
@@ -114,7 +114,7 @@ const Register = ({ navigation }) => {
                   avatar ? (
                     <Image source={{ uri: avatar }} style={styles.avatar} />
                   ) : (
-                    <Image source={require('./image/user.png')} style={styles.avatar} />
+                    <Image source={require('./image/user.jpg')} style={styles.avatar} />
                   )
                 }
               </TouchableOpacity>

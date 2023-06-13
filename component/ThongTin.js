@@ -117,7 +117,7 @@ const ProfileView = ({ navigation }) => {
               avatar ? (
                 <Image source={{ uri: avatar }} style={styles.profilePhoto} />
               ) : (
-                <Image source={require('./image/user.png')} style={styles.profilePhoto} />
+                <Image source={require('./image/user.jpg')} style={styles.profilePhoto} />
               )
             }
           </TouchableOpacity>

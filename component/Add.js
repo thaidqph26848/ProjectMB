@@ -15,14 +15,13 @@ import DropDownPicker from 'react-native-dropdown-picker';
 const { width } = Dimensions.get('screen');
 const cardWidth = width / 2 - 20;
 var dem = 0;
-const URL = "http://192.168.1.6:3000/api/sp";
+const url_pro = "http://172.19.200.210:3000/sanpham";
 const Add = ({ navigation }) => {
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
     const [name, setname] = useState('');
     const [brand, setbrand] = useState()
     const [price, setprice] = useState()
-    const [image, setimage] = useState()
 
     const [showModalDialog, setshowModalDialog] = useState(false);
     const [showModalDialog2, setshowModalDialog2] = useState(false);
@@ -34,6 +33,56 @@ const Add = ({ navigation }) => {
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(null);
     const [items, setItems] = useState([]);
+
+    const SaveSP = () => {
+        let objSP = { ten_sp: name, gia: gia, hang: brand, image: img_base64 };
+
+        fetch(url_pro, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(objSP)
+        })
+            .then((res) => {
+                if (res.status == 201)
+                    alert("Thêm thành công")
+                setshowModalDialog(false)
+                reloadData()
+
+            }).catch((e) => {
+                console.log(e);
+            });
+    }
+    const Update = () => {
+
+        let objSP = { id: id, ten_sp: name, gia: gia, hang: brand, image: img_base64 };
+
+        let url_pro = 'http://172.19.200.210:3000/sanpham' + id;
+
+        fetch(url_pro, {
+            method: "PUT",
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+
+            body: JSON.stringify(objSP)
+        })
+            .then((res) => {
+                if (res.status = 201) {
+                    alert("Update thành công");
+                    setshowModalDialog("false");
+                    getSP()
+                }
+
+            })
+            .catch((ex) => {
+                console.log(ex);
+            });
+
+    }
 
     const reloadData = React.useCallback(
         () => {
@@ -62,6 +111,23 @@ const Add = ({ navigation }) => {
 
 
     const Card = ({ item }) => {
+
+        // const showDialog = () => {
+        //     setVisible(true);
+        // };
+
+        const toggleModal = () => {
+            setshowModalDialog(!showModalDialog);
+        };
+        const ModalUpdate = () => {
+            toggleModal();
+            setid(item.id)
+            setname(item.ten_sp);
+            setgia(item.gia);
+            setbrand(item.hang)
+
+        };
+
 
 
         const createTwoButtonAlert = () =>
@@ -119,7 +185,7 @@ const Add = ({ navigation }) => {
                             ${item.price}
                         </Text>
                         <View style={styles.addToCartBtn}>
-                            <Icon name="edit" size={20} color={COLORS.white} onPress={() => { setshowModalDialog2(true) }} />
+                            <Icon name="edit" size={20} color={COLORS.white} onPress={ModalUpdate} />
                         </View>
                         <View style={styles.addToCartBtn}>
                             <Icon name="delete" size={20} color={COLORS.white} onPress={createTwoButtonAlert} />
@@ -190,15 +256,20 @@ const Add = ({ navigation }) => {
                         <Text style={{ fontSize: 20, marginRight: 300 }}>Back</Text>
                     </View>
                     <View style={styles.Khung_dialog}>
-                        <Text>Thêm San Pham</Text>
+                        <Text>Thêm sản phẩm</Text>
                         <TextInput style={styles.input}
-                            placeholder="Ten" value={name}
-                            onChangeText={(name) => { setname(name) }}
+                            placeholder="tên"
+                            onChangeText={(txt) => { setname(txt) }}
                         >
                         </TextInput>
                         <TextInput style={styles.input}
-                            placeholder="Gia " value={price}
-                            onChangeText={(price) => { setprice(price) }}
+                            placeholder="hãng"
+                            onChangeText={(txt) => { setbrand(txt) }}
+                        >
+                        </TextInput>
+                        <TextInput style={styles.input}
+                            placeholder="giá "
+                            onChangeText={(txt) => { setprice(txt) }}
                         >
                         </TextInput>
                         <View style={styles.drdown}>
@@ -218,53 +289,68 @@ const Add = ({ navigation }) => {
                         {img_base64 && <Image source={{ uri: img_base64 }} style={{ width: 200, height: 200, marginLeft: 75 }} />}
                         <View style={{ margin: 5 }} />
                         <Button
-                            title="Them" />
+                            title="Thêm"
+                            onPress={
+                                SaveSP
+                            } />
 
                     </View>
                 </Modal>
 
                 {/* update san pham */}
-                <View>
-                    <Modal visible={showModalDialog2}>
-                        <View style={styles.container}>
-                            <Icon name="arrow-back-ios" size={28} onPress={() => {
+                <Modal visible={showModalDialog}>
+                    <View style={styles.container}>
+                        <Icon name="arrow-back-ios" size={28} onPress={() => {
+                            setshowModalDialog2(false)
+                        }} />
+                        <Text style={{ fontSize: 20, marginRight: 300 }}>Back</Text>
+                    </View>
+                    <View style={styles.Khung_dialog}>
+                        <Text>Thêm sản phẩm</Text>
+                        <TextInput style={styles.input}
+                            placeholder="tên"
+                            onChangeText={(txt) => { setname(txt) }}
+                        >
+                        </TextInput>
+                        <TextInput style={styles.input}
+                            placeholder="hãng"
+                            onChangeText={(txt) => { setbrand(txt) }}
+                        >
+                        </TextInput>
+                        <TextInput style={styles.input}
+                            placeholder="giá "
+                            onChangeText={(txt) => { setprice(txt) }}
+                        >
+                        </TextInput>
+                        <View style={styles.drdown}>
+                            <DropDownPicker
+                                placeholder="Chon Hang"
+                                open={open}
+                                value={value}
+                                items={items}
+                                setOpen={setOpen}
+                                setValue={setValue}
+                                setItems={setItems}
+                            />
+                        </View>
+                        <View style={{ margin: 10 }} />
+                        <Button title="Add Picture" onPress={pickImage} />
+                        <View style={{ margin: 5 }} />
+                        {img_base64 && <Image source={{ uri: img_base64 }} style={{ width: 200, height: 200, marginLeft: 75 }} />}
+                        <View style={{ margin: 5 }} />
+                        <Button
+                            title="Thêm"
+                            onPress={
+                                Update
+                            } />
+                        <Button
+                            title="huy"
+                            onPress={() => {
                                 setshowModalDialog2(false)
                             }} />
-                            <Text style={{ fontSize: 20, marginRight: 300 }}>Back</Text>
-                        </View>
-                        <View style={styles.Khung_dialog}>
-                            <Text>Sua San Pham</Text>
-                            <TextInput style={styles.input}
-                                placeholder="Ten" value={name}
-                                onChangeText={(name) => { setname(name) }}
-                            >
-                            </TextInput>
-                            <TextInput style={styles.input}
-                                placeholder="Gia " value={price}
-                                onChangeText={(price) => { setprice(price) }}
-                            >
-                            </TextInput>
-                            <View style={styles.drdown}>
-                                <DropDownPicker
-                                    placeholder="Chon Hang"
-                                    open={open}
-                                    value={value}
-                                    items={items}
-                                    setOpen={setOpen}
-                                    setValue={setValue}
-                                    setItems={setItems}
-                                />
-                            </View>
-                            <View style={{ margin: 10 }} />
-                            <Button title="Add Picture" onPress={pickImage} />
-                            <View style={{ margin: 5 }} />
-                            {img_base64 && <Image source={{ uri: img_base64 }} style={{ width: 200, height: 200, marginLeft: 75 }} />}
-                            <View style={{ margin: 5 }} />
-                            <Button
-                                title="Them" />
-                        </View>
-                    </Modal>
-                </View>
+
+                    </View>
+                </Modal>
             </View>
             <FlatList
                 data={data}
