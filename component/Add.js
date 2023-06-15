@@ -14,7 +14,6 @@ let URL_ADD = "http://192.168.1.22:3000/sanpham?_expand=cat";
 const { width } = Dimensions.get('screen');
 const cardWidth = width / 2 - 20;
 var dem = 0;
-<<<<<<< HEAD
 const Add = ({ navigation }) => {
     const [isLoading, setLoading] = useState(true);
     const [sanpham, setsanpham] = useState([]);
@@ -24,15 +23,6 @@ const Add = ({ navigation }) => {
     const [mota, setmota] = useState('')
     const [image, setimage] = useState()
     const [id, setid] = useState('')
-=======
-const url_pro = "http://172.19.200.210:3000/sanpham";
-const Add = ({ navigation }) => {
-    const [isLoading, setLoading] = useState(true);
-    const [data, setData] = useState([]);
-    const [name, setname] = useState('');
-    const [brand, setbrand] = useState()
-    const [price, setprice] = useState()
->>>>>>> 3e53373e35ff8eafb1abf04dcf1683f6c4c0ca2e
 
     const [showModalDialog, setshowModalDialog] = useState(false);
     const [showModalDialog2, setshowModalDialog2] = useState(false);
@@ -46,18 +36,11 @@ const Add = ({ navigation }) => {
     const [value, setValue] = useState(null);
     const [items, setItems] = useState([]);
 
-<<<<<<< HEAD
 
     const SaveSP = () => {
         let objSP = { ten_sp: ten_sp, gia: gia, hang: hang, mota: mota, image: img_base64, catId: value };
 
         fetch(URL, {
-=======
-    const SaveSP = () => {
-        let objSP = { ten_sp: name, gia: gia, hang: brand, image: img_base64 };
-
-        fetch(url_pro, {
->>>>>>> 3e53373e35ff8eafb1abf04dcf1683f6c4c0ca2e
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -68,18 +51,13 @@ const Add = ({ navigation }) => {
             .then((res) => {
                 if (res.status == 201)
                     alert("Thêm thành công")
-<<<<<<< HEAD
                 getSP();
                 showModalDialog(false)
-=======
-                setshowModalDialog(false)
->>>>>>> 3e53373e35ff8eafb1abf04dcf1683f6c4c0ca2e
                 reloadData()
 
             }).catch((e) => {
                 console.log(e);
             });
-<<<<<<< HEAD
 
     }
     const getDrop = () => {
@@ -96,38 +74,6 @@ const Add = ({ navigation }) => {
     }
 
 
-=======
-    }
-    const Update = () => {
-
-        let objSP = { id: id, ten_sp: name, gia: gia, hang: brand, image: img_base64 };
-
-        let url_pro = 'http://172.19.200.210:3000/sanpham' + id;
-
-        fetch(url_pro, {
-            method: "PUT",
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-
-            body: JSON.stringify(objSP)
-        })
-            .then((res) => {
-                if (res.status = 201) {
-                    alert("Update thành công");
-                    setshowModalDialog("false");
-                    getSP()
-                }
-
-            })
-            .catch((ex) => {
-                console.log(ex);
-            });
-
-    }
-
->>>>>>> 3e53373e35ff8eafb1abf04dcf1683f6c4c0ca2e
     const reloadData = React.useCallback(
         () => {
             setreloading(true);
@@ -153,7 +99,6 @@ const Add = ({ navigation }) => {
 
     const Update = () => {
 
-<<<<<<< HEAD
         let objSP = { id: id, ten_sp: ten_sp, gia: gia, mota: mota, hang: hang, image: img_base64, catId: value };
 
         let url_pro = 'http://192.168.1.22:3000/sanpham/' + id;
@@ -185,19 +130,10 @@ const Add = ({ navigation }) => {
     const Card = ({ item }) => {
         const toggleModal = () => {
             setshowModalDialog2(!showModalDialog2);
-=======
-        // const showDialog = () => {
-        //     setVisible(true);
-        // };
-
-        const toggleModal = () => {
-            setshowModalDialog(!showModalDialog);
->>>>>>> 3e53373e35ff8eafb1abf04dcf1683f6c4c0ca2e
         };
         const ModalUpdate = () => {
             toggleModal();
             setid(item.id)
-<<<<<<< HEAD
             setten_sp(item.ten_sp);
             setgia(item.gia);
             sethang(item.hang)
@@ -205,44 +141,8 @@ const Add = ({ navigation }) => {
             setmota(item.mota)
 
         };
-=======
-            setname(item.ten_sp);
-            setgia(item.gia);
-            setbrand(item.hang)
 
-        };
-
-
->>>>>>> 3e53373e35ff8eafb1abf04dcf1683f6c4c0ca2e
-
-        const createTwoButtonAlert = () =>
-            Alert.alert('Xoa sp', "Xóa san pham: " + item.ten_sp, [
-                {
-                    text: 'cancel',
-                    onPress: () => console.log('Cancel Pressed'),
-                    style: 'cancel',
-                },
-                {
-                    text: 'OK', onPress: () => {
-
-                        let url_pro = "http://192.168.1.22:3000/sanpham/" + item.id;
-
-                        fetch(url_pro, {
-                            method: 'DELETE'
-                        })
-                            .then(response => {
-                                if (response = 200) {
-                                    getSP();
-                                    alert("Xóa thành công")
-                                }
-                            })
-                            .catch((err) => {
-                                console.log(err)
-                            });
-
-                    },
-                },
-            ]);
+        
 
         return (
 
@@ -274,7 +174,7 @@ const Add = ({ navigation }) => {
                             <Icon name="edit" size={20} color={COLORS.white} onPress={ModalUpdate} />
                         </View>
                         <View style={styles.addToCartBtn}>
-                            <Icon name="delete" size={20} color={COLORS.white} onPress={createTwoButtonAlert} />
+                            <Icon name="delete" size={20} color={COLORS.white}  />
                         </View>
                     </View>
                 </View>
@@ -348,7 +248,6 @@ const Add = ({ navigation }) => {
                         <Text>Thêm sản phẩm</Text>
                         <TextInput style={styles.input}
                             placeholder="tên"
-<<<<<<< HEAD
                             onChangeText={(txt) => { setten_sp(txt) }}
                         >
                         </TextInput>
@@ -360,19 +259,6 @@ const Add = ({ navigation }) => {
                         <TextInput style={styles.input}
                             placeholder="mo ta "
                             onChangeText={(txt) => { setmota(txt) }}
-=======
-                            onChangeText={(txt) => { setname(txt) }}
-                        >
-                        </TextInput>
-                        <TextInput style={styles.input}
-                            placeholder="hãng"
-                            onChangeText={(txt) => { setbrand(txt) }}
-                        >
-                        </TextInput>
-                        <TextInput style={styles.input}
-                            placeholder="giá "
-                            onChangeText={(txt) => { setprice(txt) }}
->>>>>>> 3e53373e35ff8eafb1abf04dcf1683f6c4c0ca2e
                         >
                         </TextInput>
                         <View style={styles.drdown}>
@@ -396,7 +282,6 @@ const Add = ({ navigation }) => {
                             onPress={
                                 SaveSP
                             } />
-<<<<<<< HEAD
                     </View>
                 </Modal>
             </View>
@@ -445,66 +330,6 @@ const Add = ({ navigation }) => {
 
                     </View>
                 </Modal>
-=======
-
-                    </View>
-                </Modal>
-
-                {/* update san pham */}
-                <Modal visible={showModalDialog}>
-                    <View style={styles.container}>
-                        <Icon name="arrow-back-ios" size={28} onPress={() => {
-                            setshowModalDialog2(false)
-                        }} />
-                        <Text style={{ fontSize: 20, marginRight: 300 }}>Back</Text>
-                    </View>
-                    <View style={styles.Khung_dialog}>
-                        <Text>Thêm sản phẩm</Text>
-                        <TextInput style={styles.input}
-                            placeholder="tên"
-                            onChangeText={(txt) => { setname(txt) }}
-                        >
-                        </TextInput>
-                        <TextInput style={styles.input}
-                            placeholder="hãng"
-                            onChangeText={(txt) => { setbrand(txt) }}
-                        >
-                        </TextInput>
-                        <TextInput style={styles.input}
-                            placeholder="giá "
-                            onChangeText={(txt) => { setprice(txt) }}
-                        >
-                        </TextInput>
-                        <View style={styles.drdown}>
-                            <DropDownPicker
-                                placeholder="Chon Hang"
-                                open={open}
-                                value={value}
-                                items={items}
-                                setOpen={setOpen}
-                                setValue={setValue}
-                                setItems={setItems}
-                            />
-                        </View>
-                        <View style={{ margin: 10 }} />
-                        <Button title="Add Picture" onPress={pickImage} />
-                        <View style={{ margin: 5 }} />
-                        {img_base64 && <Image source={{ uri: img_base64 }} style={{ width: 200, height: 200, marginLeft: 75 }} />}
-                        <View style={{ margin: 5 }} />
-                        <Button
-                            title="Thêm"
-                            onPress={
-                                Update
-                            } />
-                        <Button
-                            title="huy"
-                            onPress={() => {
-                                setshowModalDialog2(false)
-                            }} />
-
-                    </View>
-                </Modal>
->>>>>>> 3e53373e35ff8eafb1abf04dcf1683f6c4c0ca2e
             </View>
             <ScrollView refreshControl={
                 <RefreshControl refreshing={reloading}
