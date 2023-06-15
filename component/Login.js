@@ -22,7 +22,7 @@ const Login = ({ navigation }) => {
 
     //lay data
 
-    let url_login = 'http://172.19.200.210:3000/user?username=' + username;
+    let url_login = 'http://192.168.1.22:3000/user?username=' + username;
 
     fetch(url_login)
       .then((res) => {
@@ -49,17 +49,18 @@ const Login = ({ navigation }) => {
       })
   }
   return (
-      
-      <SafeAreaView style={{ flex: 1,backgroundColor: '#FFF' }}>
+    <ImageBackground style={{ height: '100%', width: '100%' }} source={require('./image/backgroung.png')} resizeMode='stretch' >
+      <StatusBar barStyle={"light-content"} />
+      <SafeAreaView style={{ flex: 1,backgroundColor: '#061f33' }}>
         <View style={styles.container}>
-          <Image style={{ width: '100%', height: '20%', padding: 50, margin: 30 }} source={require('./image/logostore.png')} />
+          <Image style={{ width: '100%', height: '22%', padding: 50, margin: 30 }} source={require('./image/logostore2.png')} />
           <Text style={styles.title}>
             WELCOME
           </Text>
           <View style={styles.textInput}>
-            <TextInput style={{ color: 'black', fontSize: 18 }}
+            <TextInput style={{ color: '#94cbf4', fontSize: 18 }}
               placeholder='Username'
-              placeholderTextColor="black"
+              placeholderTextColor="#94cbf4"
               onChangeText={(txt) => {
                 setusername(txt)
               }}
@@ -67,9 +68,9 @@ const Login = ({ navigation }) => {
           </View>
 
           <View style={styles.password}>
-            <TextInput style={{ color: 'black', fontSize: 18, }}
+            <TextInput style={{ color: '#94cbf4', fontSize: 18, }}
               placeholder="Password"
-              placeholderTextColor="black"
+              placeholderTextColor="#94cbf4"
               secureTextEntry={getPasswordVisible ? false : true}
               onChangeText={(txt) => {
                 setpassword(txt)
@@ -92,7 +93,7 @@ const Login = ({ navigation }) => {
           </TouchableOpacity>
 
           <View>
-            <Text>Don't have account?
+            <Text style={{color:'#94cbf4'}}>Don't have account?
               <Text style={styles.singup}
                 onPress={() => {
                   navigation.navigate('Register');
@@ -105,7 +106,7 @@ const Login = ({ navigation }) => {
         </View>
 
       </SafeAreaView>
-  
+      </ImageBackground>
   )
 }
 export default Login;
@@ -121,35 +122,35 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 10,
     fontSize: 35,
-    color: 'black'
+    color: '#94cbf4'
   },
   textInput: {
     padding: 5,
     borderWidth: 1,
-    borderColor: 'black',
+    borderColor: '#94cbf4',
     borderRadius: 5,
     width: "70%",
     height: 45,
     marginBottom: 20,
-    color: '#fff',
+    color: '#94cbf4',
     fontSize: 50
   },
   password: {
     padding: 5,
     borderWidth: 1,
-    borderColor: 'black',
+    borderColor: '#94cbf4',
     borderRadius: 5,
     width: "70%",
     height: 45,
     marginBottom: 20,
     fontSize: 100,
-    color: '#fff',
+    color: '#94cbf4',
     paddingRight: 45
   },
   forgot_button: {
     height: 30,
     marginBottom: 30,
-    color: '#FFF'
+    color: '#94cbf4'
   },
   loginBtn:
   {
@@ -159,10 +160,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginTop: 40,
-    backgroundColor: "#1d8bf1",
+    backgroundColor: "#94cbf4",
   },
   singup: {
-    color: '#1d8bf1',
+    color: '#94cbf4',
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 14,

@@ -21,6 +21,7 @@ const ChiTietSP = ({ navigation, route }) => {
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(null);
     const [items, setItems] = useState([]);
+    
     return (
         <SafeAreaView style={{ backgroundColor: COLORS.white }}>
             <View style={styles.container}>
@@ -34,8 +35,9 @@ const ChiTietSP = ({ navigation, route }) => {
                         justifyContent: 'center',
                         alignItems: 'center',
                         height: 280,
+                        marginBottom:63
                     }}>
-                    <Image style={{ height: 220, width: 220 }}
+                    <Image style={{ height: 265, width: 200 }}
                         source={{ uri: `${item.image}` }} />
                 </View>
                 <View style={styles.details}>
@@ -67,11 +69,7 @@ const ChiTietSP = ({ navigation, route }) => {
                     <Text style={styles.detailsText}>
                         {item.mota}
                     </Text>
-                    <View style={{ marginTop: 40, marginBottom: 40 }}>
-                        <SecondaryButton title="Add To Cart"
-                            onPress={() => navigation.navigate('GioHang', item)}
-                        />
-                    </View>
+                   
                 </View>
             </ScrollView>
         </SafeAreaView>

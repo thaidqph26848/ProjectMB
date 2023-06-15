@@ -41,7 +41,7 @@ const Register = ({ navigation }) => {
     }
   }
   const addUser = () => {
-    let url_login = 'http://172.19.200.210:3000/user?username=' + username;
+    let url_login = 'http://192.168.1.22:3000/user?username=' + username;
 
     fetch(url_login, {
       method: 'POST',
@@ -103,8 +103,13 @@ const Register = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       <StatusBar barStyle={"light-content"} />
-      <SafeAreaView style={{ flex: 1, }}>
-        <Image style={{ width: '97%', height: 10, padding: 50, margin: 5 }} source={require('./image/signup.png')} />
+      <SafeAreaView style={{ flex: 1 }}>
+        <Text style={styles.title}>
+          Create Your Account
+        </Text>
+        <Text style={styles.title2}>
+          Please enter info to create account
+        </Text>
         <View style={styles.container}>
           <KeyboardAvoidingView behavior='position'>
 
@@ -114,7 +119,7 @@ const Register = ({ navigation }) => {
                   avatar ? (
                     <Image source={{ uri: avatar }} style={styles.avatar} />
                   ) : (
-                    <Image source={require('./image/user.jpg')} style={styles.avatar} />
+                    <Image source={require('./image/user.png')} style={styles.avatar} />
                   )
                 }
               </TouchableOpacity>
@@ -148,7 +153,17 @@ const Register = ({ navigation }) => {
             <Text style={styles.loginText}>Register</Text>
           </TouchableOpacity>
 
-
+          <View style={{ textAlign: 'center', marginLeft: 75, marginTop: 12 }}>
+            <Text style={{ color: '#fff' }}>Already have an account?
+              <Text style={styles.singup}
+                onPress={() => {
+                  navigation.navigate('Login');
+                }}
+              >
+                Login
+              </Text>
+            </Text>
+          </View>
         </View>
       </SafeAreaView>
     </ImageBackground>
@@ -167,7 +182,15 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 10,
     fontSize: 35,
-    color: '#fff'
+    color: '#fff',
+    fontWeight: 'bold'
+  },
+  title2: {
+    textAlign: 'center',
+    fontSize: 18,
+    color: '#fff',
+    marginBottom:25,
+    
   },
   textInput: {
     padding: 5,
@@ -244,5 +267,13 @@ const styles = StyleSheet.create({
     marginLeft: 130,
     marginBottom: 40
 
+  }, singup: {
+    color: '#1f8ef2',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 14,
+    alignSelf: 'center',
+    padding: 10,
+    margin: 10
   }
 })

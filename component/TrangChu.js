@@ -8,13 +8,10 @@ const { width } = Dimensions.get('screen');
 const cardWidth = width / 2 - 20;
 let strKey = 'loginInfo'
 var dem = 0;
-<<<<<<< HEAD
 let URL = "http://192.168.1.22:3000/sanpham";
 let URL_ADD = "http://192.168.1.22:3000/sanpham?_expand=cat";
-=======
-let URL = "http://172.19.200.210:3000/sanpham";
 
->>>>>>> 3e53373e35ff8eafb1abf04dcf1683f6c4c0ca2e
+
 const TrangChu = ({ navigation }) => {
     const [isLoading, setLoading] = useState(true);
     const [sanpham, setsanpham] = useState([]);
@@ -23,6 +20,9 @@ const TrangChu = ({ navigation }) => {
     const [gia, setgia] = useState('');
     const [image, setimage] = useState()
     const [mota, setmota] = useState('')
+
+    const [search, setsearch] = useState('')
+    const [fillter, setfillter] = useState([]);
 
     const [fullname, setfullname] = useState("");
     const [avatar, setAvatar] = useState(null)
@@ -73,12 +73,33 @@ const TrangChu = ({ navigation }) => {
         try {
             const response = await fetch(URL_ADD);
             const json = await response.json();
+            setfillter(json);
             setsanpham(json);
+
         } catch (e) {
             console.log(e);
         }
 
     }
+    
+    const getfillter = async (text) => {
+       if (text) {
+        const newData = sanpham.filter((item) =>{
+           const itemDta = item.ten_sp ? 
+           item.ten_sp.toUpperCase()
+           : ''.toUpperCase();
+           const textData = text.toUpperCase();
+           return itemDta.indexOf(textData) > -1;
+        });
+        setfillter(newData);
+        setsearch(text);
+       } else{
+        setfillter(sanpham);
+        setsearch(text);
+       }
+
+    }
+
     const Card = ({ item }) => {
         return (
             <TouchableHighlight
@@ -87,7 +108,7 @@ const TrangChu = ({ navigation }) => {
                 onPress={() => navigation.navigate('ChiTietSP', item)}>
                 <View style={styles.card}>
                     <View style={{ alignItems: 'center', marginBottom: 10, marginTop: 5 }}>
-                        <Image style={{ height: 100, width: 100 }}
+                        <Image style={{ height: 132, width: 100  }}
                             source={{ uri: `${item.image}` }} />
                     </View>
                     <View style={{ marginHorizontal: 20 }}>
@@ -104,10 +125,10 @@ const TrangChu = ({ navigation }) => {
                             justifyContent: 'space-between',
                         }}>
                         <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
-                            ${item.gia}
+                            {item.gia} đ
                         </Text>
                         <View style={styles.addToCartBtn}>
-                            <Icon name="add" size={20} color={COLORS.white} />
+                            <Icon name="add" size={20} color={COLORS.white}  onPress={() => navigation.navigate('GioHang', item)}/>
                         </View>
                     </View>
                 </View>
@@ -144,11 +165,10 @@ const TrangChu = ({ navigation }) => {
             }}>
                 <View style={styles.inputContainer}>
                     <Icon name='search' size={28} />
-                    <TextInput style={{ flex: 1, fontSize: 18 }} placeholder='Search... ' />
+                    <TextInput style={{ flex: 1, fontSize: 18 }} placeholder='Search... '  value={search} onChangeText={(text)=>getfillter(text)}
+                 />
                 </View>
-                <View style={styles.sortBtn}>
-                    <Icon name='tune' size={28} color={COLORS.white} />
-                </View>
+
             </View>
             <ScrollView refreshControl={
                 <RefreshControl refreshing={reloading}
@@ -156,7 +176,7 @@ const TrangChu = ({ navigation }) => {
             }>
                 <SafeAreaView style={{ flex: 1, }}>
                     <View >
-                        <FlatList data={sanpham}
+                        <FlatList data={fillter}
                             keyExtractor={(item) => { return item.id }}
                             numColumns={2}
                             renderItem={Card} style={{ marginBottom: 10 }} />
@@ -216,7 +236,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     card: {
-        height: 230,
+        height: 250,
         width: cardWidth,
         marginHorizontal: 10,
         marginBottom: 20,
@@ -226,9 +246,9 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.white,
     },
     addToCartBtn: {
-        height: 30,
-        width: 30,
-        borderRadius: 20,
+        height: 40,
+        width: 40,
+        borderRadius: 40,
         backgroundColor: COLORS.primary,
         justifyContent: 'center',
         alignItems: 'center',
