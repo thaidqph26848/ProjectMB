@@ -3,11 +3,25 @@ import React, { useState } from 'react';
 import COLORS from './colors/colors';
 import { SecondaryButton } from './Button/Button';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+let url_GH = "http://192.168.1.22:3000/giohangs"
 const ChiTietSP = ({ navigation, route }) => {
     const item = route.params;
-    return (
 
+    const [isLoading, setLoading] = useState(true);
+    const [sanpham, setsanpham] = useState([]);
+    const [ten_sp, setten_sp] = useState('');
+    const [hang, sethang] = useState('');
+    const [gia, setgia] = useState('');
+    const [image, setimage] = useState()
+    const [mota, setmota] = useState('')
+    const [img_source, setimg_source] = useState(null)
+    const [img_base64, setiimg_base64] = useState(null)
+
+    const [open, setOpen] = useState(false);
+    const [value, setValue] = useState(null);
+    const [items, setItems] = useState([]);
+    return (
         <SafeAreaView style={{ backgroundColor: COLORS.white }}>
             <View style={styles.container}>
                 <Icon name="arrow-back-ios" size={28} onPress={navigation.goBack} />
@@ -34,15 +48,15 @@ const ChiTietSP = ({ navigation, route }) => {
                         <View>
                             <Text
                                 style={{ fontSize: 25, fontWeight: 'bold', color: COLORS.white }}>
-                                Ten: {item.name}
+                                Ten: {item.ten_sp}
                             </Text>
                             <Text
                                 style={{ fontSize: 25, fontWeight: 'bold', color: COLORS.white }}>
-                                Gia: {item.price}$
+                                Gia: {item.gia}$
                             </Text>
                             <Text
                                 style={{ fontSize: 25, fontWeight: 'bold', color: COLORS.white }}>
-                                Hang: {item.brand}
+                                Hang: {item.cat.name}
                             </Text>
                         </View>
 
@@ -51,16 +65,12 @@ const ChiTietSP = ({ navigation, route }) => {
                         </View>
                     </View>
                     <Text style={styles.detailsText}>
-                        Hiệu năng vượt trội - Chip Apple A15 Bionic mạnh mẽ, hỗ trợ mạng 5G tốc độ cao
-                        Không gian hiển thị sống động - Màn hình 6.1" Super Retina XDR độ sáng cao, sắc nét
-                        Trải nghiệm điện ảnh đỉnh cao - Camera kép 12MP, hỗ trợ ổn định hình ảnh quang học
-                        Tối ưu điện năng - Sạc nhanh 20 W, đầy 50% pin trong khoảng 30 phút
+                        {item.mota}
                     </Text>
                     <View style={{ marginTop: 40, marginBottom: 40 }}>
                         <SecondaryButton title="Add To Cart"
                             onPress={() => navigation.navigate('GioHang', item)}
                         />
-
                     </View>
                 </View>
             </ScrollView>

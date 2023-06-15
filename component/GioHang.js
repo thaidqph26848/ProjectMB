@@ -2,13 +2,28 @@ import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, ImageBackgr
 import React, { useState } from 'react';
 import COLORS from './colors/colors';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import foods from './Category/datatmp';
 import { PrimaryButton } from './Button/Button';
-const GioHang = ({ navigation }) => {
-    const CartCard = ({ item }) => {
+import AsyncStorage from '@react-native-async-storage/async-storage';
+let URL_ADD = "http://192.168.1.22:3000/sanpham?_expand=cat";
+var dem = 0;
+const GioHang = ({ navigation,route }) => {
+    const item = route.params;
+    const [isLoading, setLoading] = useState(true);
+    const [sanpham, setsanpham] = useState([]);
+    const [ten_sp, setten_sp] = useState('');
+    const [hang, sethang] = useState('');
+    const [gia, setgia] = useState('');
+    const [image, setimage] = useState()
+
+    const [counter, setcounter] = useState(dem);
+    const [reloading, setreloading] = useState(false);
+
+    
+
+    const CartCard = ({item}) => {
         return (
             <View style={styles.cartCard}>
-                <Image source={item.image} style={{ height: 80, width: 80 }} />
+                <Image source={{ uri: `${item.image}` }} style={{ height: 80, width: 80 }} />
                 <View
                     style={{
                         height: 100,
@@ -16,11 +31,11 @@ const GioHang = ({ navigation }) => {
                         paddingVertical: 20,
                         flex: 1,
                     }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{item.name}</Text>
+                    <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{item.ten_sp}</Text>
                     <Text style={{ fontSize: 13, color: COLORS.grey }}>
-                        {item.ingredients}
+                        {item.cat.name}
                     </Text>
-                    <Text style={{ fontSize: 17, fontWeight: 'bold' }}>${item.price}</Text>
+                    <Text style={{ fontSize: 17, fontWeight: 'bold' }}>${item.gia}</Text>
                 </View>
                 <View style={{ marginRight: 20, alignItems: 'center' }}>
                     <Text style={{ fontWeight: 'bold', fontSize: 18 }}>3</Text>
@@ -42,7 +57,7 @@ const GioHang = ({ navigation }) => {
             <FlatList
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingBottom: 80 }}
-                data={foods}
+                data={sanpham}
                 renderItem={({ item }) => <CartCard item={item} />}
                 ListFooterComponentStyle={{ paddingHorizontal: 20, marginTop: 20 }}
                 ListFooterComponent={() => (

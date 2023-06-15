@@ -1,28 +1,28 @@
 import {
     StyleSheet, Text, View, Image, TextInput, TouchableOpacity, ImageBackground, StatusBar,
-    SafeAreaView, Modal, showModalDialog, Button, ScrollView, FlatList, TouchableHighlight, Dimensions, Alert
+    SafeAreaView, Modal, showModalDialog, Button, ScrollView, FlatList, TouchableHighlight, Dimensions, Alert, RefreshControl
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import COLORS from './colors/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import categories from './Category/categories';
-import foods from './Category/datatmp';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import DropDownPicker from 'react-native-dropdown-picker';
-
+let URL = "http://192.168.1.22:3000/sanpham";
+let URL_ADD = "http://192.168.1.22:3000/sanpham?_expand=cat";
 const { width } = Dimensions.get('screen');
 const cardWidth = width / 2 - 20;
 var dem = 0;
-const URL = "http://192.168.1.6:3000/api/sp";
 const Add = ({ navigation }) => {
     const [isLoading, setLoading] = useState(true);
-    const [data, setData] = useState([]);
-    const [name, setname] = useState('');
-    const [brand, setbrand] = useState()
-    const [price, setprice] = useState()
+    const [sanpham, setsanpham] = useState([]);
+    const [ten_sp, setten_sp] = useState('');
+    const [hang, sethang] = useState('');
+    const [gia, setgia] = useState('');
+    const [mota, setmota] = useState('')
     const [image, setimage] = useState()
+    const [id, setid] = useState('')
 
     const [showModalDialog, setshowModalDialog] = useState(false);
     const [showModalDialog2, setshowModalDialog2] = useState(false);
@@ -31,9 +31,48 @@ const Add = ({ navigation }) => {
     const [img_source, setimg_source] = useState(null)
     const [img_base64, setiimg_base64] = useState(null)
 
+
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(null);
     const [items, setItems] = useState([]);
+
+
+    const SaveSP = () => {
+        let objSP = { ten_sp: ten_sp, gia: gia, hang: hang, mota: mota, image: img_base64, catId: value };
+
+        fetch(URL, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(objSP)
+        })
+            .then((res) => {
+                if (res.status == 201)
+                    alert("Thêm thành công")
+                getSP();
+                showModalDialog(false)
+                reloadData()
+
+            }).catch((e) => {
+                console.log(e);
+            });
+
+    }
+    const getDrop = () => {
+        let url_api_drop = 'http://192.168.1.22:3000/cats';
+        fetch(url_api_drop)
+            .then((res) => { return res.json(); })
+            .then((res_json) => {
+                let arr_dropdown = res_json.map((item, index, arr) => {
+                    return { label: item.name, value: item.id }
+                });
+                setItems(arr_dropdown);
+            })
+
+    }
+
 
     const reloadData = React.useCallback(
         () => {
@@ -46,26 +85,65 @@ const Add = ({ navigation }) => {
             }, 2000);
         }
     );
-    const getData = () => {
-        fetch(URL)
-            .then((response) => response.json()) // get response, convert to json
-            .then((json) => {
-                setData(json.data);
-                setname(json.name);
-                setprice(json.price);
-                setbrand(json.brand);
-                setimage(json.image)
-            })
-            .catch((error) => alert(error)) // display errors
-            .finally(() => setLoading(false)); // change loading state
+    const getSP = async () => {
+        try {
+            const response = await fetch(URL_ADD);
+            const json = await response.json();
+            setsanpham(json);
+        } catch (e) {
+            console.log(e);
+        }
+
     }
 
 
-    const Card = ({ item }) => {
+    const Update = () => {
 
+        let objSP = { id: id, ten_sp: ten_sp, gia: gia, mota: mota, hang: hang, image: img_base64, catId: value };
+
+        let url_pro = 'http://192.168.1.22:3000/sanpham/' + id;
+
+        fetch(url_pro, {
+            method: "PUT",
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+
+            body: JSON.stringify(objSP)
+        })
+            .then((res) => {
+                if (res.status = 200) {
+                    alert("Update thành công");
+                    setshowModalDialog2(false)
+                    reloadData();
+                  
+                }
+
+            })
+            .catch((ex) => {
+                console.log(ex);
+            });
+
+    }
+
+    const Card = ({ item }) => {
+        const toggleModal = () => {
+            setshowModalDialog2(!showModalDialog2);
+        };
+        const ModalUpdate = () => {
+            toggleModal();
+            setid(item.id)
+            setten_sp(item.ten_sp);
+            setgia(item.gia);
+            sethang(item.hang)
+            setimage(item.image)
+            setmota(item.mota)
+
+        };
 
         const createTwoButtonAlert = () =>
-            Alert.alert('Xoa sp', "Xóa san pham: " + item.name, [
+            Alert.alert('Xoa sp', "Xóa san pham: " + item.ten_sp, [
                 {
                     text: 'cancel',
                     onPress: () => console.log('Cancel Pressed'),
@@ -74,14 +152,14 @@ const Add = ({ navigation }) => {
                 {
                     text: 'OK', onPress: () => {
 
-                        let url_pro = "http://192.168.1.6:3000/api/sp/" + item._id;
+                        let url_pro = "http://192.168.1.22:3000/sanpham/" + item.id;
 
                         fetch(url_pro, {
                             method: 'DELETE'
                         })
                             .then(response => {
                                 if (response = 200) {
-                                    getData();
+                                    getSP();
                                     alert("Xóa thành công")
                                 }
                             })
@@ -94,6 +172,7 @@ const Add = ({ navigation }) => {
             ]);
 
         return (
+
             <TouchableHighlight
                 underlayColor={COLORS.white}
                 activeOpacity={0.9}>
@@ -103,9 +182,9 @@ const Add = ({ navigation }) => {
                             source={{ uri: `${item.image}` }} />
                     </View>
                     <View style={{ marginHorizontal: 20 }}>
-                        <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{item.name}</Text>
+                        <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{item.ten_sp}</Text>
                         <Text style={{ fontSize: 14, color: COLORS.grey, marginTop: 2 }}>
-                            {item.brand}
+                            {item.cat.name}
                         </Text>
                     </View>
                     <View
@@ -116,10 +195,10 @@ const Add = ({ navigation }) => {
                             justifyContent: 'space-between',
                         }}>
                         <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
-                            ${item.price}
+                            {item.gia} đ
                         </Text>
                         <View style={styles.addToCartBtn}>
-                            <Icon name="edit" size={20} color={COLORS.white} onPress={() => { setshowModalDialog2(true) }} />
+                            <Icon name="edit" size={20} color={COLORS.white} onPress={ModalUpdate} />
                         </View>
                         <View style={styles.addToCartBtn}>
                             <Icon name="delete" size={20} color={COLORS.white} onPress={createTwoButtonAlert} />
@@ -127,10 +206,13 @@ const Add = ({ navigation }) => {
                     </View>
                 </View>
             </TouchableHighlight>
+
+
         );
     };
     useEffect(() => {
-        getData();
+        getSP();
+        getDrop();
     }, []);
     const pickImage = async () => {
 
@@ -161,7 +243,7 @@ const Add = ({ navigation }) => {
         <SafeAreaView style={{ flex: 1, }}>
             <View style={styles.container}>
                 <Icon name="arrow-back-ios" size={28} onPress={navigation.goBack} />
-                <Text style={{ fontSize: 20, marginRight: 350 }}>Back</Text>
+
             </View>
             <View style={{
                 marginTop: 40,
@@ -187,18 +269,23 @@ const Add = ({ navigation }) => {
                         <Icon name="arrow-back-ios" size={28} onPress={() => {
                             setshowModalDialog(false)
                         }} />
-                        <Text style={{ fontSize: 20, marginRight: 300 }}>Back</Text>
+
                     </View>
                     <View style={styles.Khung_dialog}>
-                        <Text>Thêm San Pham</Text>
+                        <Text>Thêm sản phẩm</Text>
                         <TextInput style={styles.input}
-                            placeholder="Ten" value={name}
-                            onChangeText={(name) => { setname(name) }}
+                            placeholder="tên"
+                            onChangeText={(txt) => { setten_sp(txt) }}
                         >
                         </TextInput>
                         <TextInput style={styles.input}
-                            placeholder="Gia " value={price}
-                            onChangeText={(price) => { setprice(price) }}
+                            placeholder="giá "
+                            onChangeText={(txt) => { setgia(txt) }}
+                        >
+                        </TextInput>
+                        <TextInput style={styles.input}
+                            placeholder="mo ta "
+                            onChangeText={(txt) => { setmota(txt) }}
                         >
                         </TextInput>
                         <View style={styles.drdown}>
@@ -218,60 +305,72 @@ const Add = ({ navigation }) => {
                         {img_base64 && <Image source={{ uri: img_base64 }} style={{ width: 200, height: 200, marginLeft: 75 }} />}
                         <View style={{ margin: 5 }} />
                         <Button
-                            title="Them" />
+                            title="Thêm"
+                            onPress={
+                                SaveSP
+                            } />
+                    </View>
+                </Modal>
+            </View>
+            <View>
+                <Modal visible={showModalDialog2}>
+                    <View style={styles.container}>
+                        <Icon name="arrow-back-ios" size={28} onPress={() => {
+                            setshowModalDialog2(false)}} />
+                    </View><View style={styles.Khung_dialog}>
+                        <Text>Sua sản phẩm</Text>
+                        <TextInput style={styles.input}
+                            placeholder="tên"
+                            onChangeText={(txt) => { setten_sp(txt); }}
+                        >{ten_sp}
+                        </TextInput>
+                        <TextInput style={styles.input}
+                            placeholder="giá "
+                            onChangeText={(txt) => { setgia(txt); }}
+                        >{gia}
+                        </TextInput>
+                        <TextInput style={styles.input}
+                            placeholder="mo ta "
+                            onChangeText={(txt) => { setmota(txt); }}
+                        >{mota}
+                        </TextInput>
+                        <View style={styles.drdown}>
+                            <DropDownPicker
+                                placeholder="Chon Hang"
+                                open={open}
+                                value={value}
+                                items={items}
+                                setOpen={setOpen}
+                                setValue={setValue}
+                                setItems={setItems} />
+                        </View>
+                        <View style={{ margin: 10 }} />
+                        <Button title="Add Picture" onPress={pickImage} />
+                        <View style={{ margin: 5 }} />
+                        {img_base64 && <Image source={{ uri: img_base64 }} style={{ width: 200, height: 200, marginLeft: 75 }} />}
+                        <View style={{ margin: 5 }} />
+                        <Button
+                            title="Sua"
+                            onPress={Update} />
+                        <View style={{ margin: 5 }} />
+
 
                     </View>
                 </Modal>
-
-                {/* update san pham */}
-                <View>
-                    <Modal visible={showModalDialog2}>
-                        <View style={styles.container}>
-                            <Icon name="arrow-back-ios" size={28} onPress={() => {
-                                setshowModalDialog2(false)
-                            }} />
-                            <Text style={{ fontSize: 20, marginRight: 300 }}>Back</Text>
-                        </View>
-                        <View style={styles.Khung_dialog}>
-                            <Text>Sua San Pham</Text>
-                            <TextInput style={styles.input}
-                                placeholder="Ten" value={name}
-                                onChangeText={(name) => { setname(name) }}
-                            >
-                            </TextInput>
-                            <TextInput style={styles.input}
-                                placeholder="Gia " value={price}
-                                onChangeText={(price) => { setprice(price) }}
-                            >
-                            </TextInput>
-                            <View style={styles.drdown}>
-                                <DropDownPicker
-                                    placeholder="Chon Hang"
-                                    open={open}
-                                    value={value}
-                                    items={items}
-                                    setOpen={setOpen}
-                                    setValue={setValue}
-                                    setItems={setItems}
-                                />
-                            </View>
-                            <View style={{ margin: 10 }} />
-                            <Button title="Add Picture" onPress={pickImage} />
-                            <View style={{ margin: 5 }} />
-                            {img_base64 && <Image source={{ uri: img_base64 }} style={{ width: 200, height: 200, marginLeft: 75 }} />}
-                            <View style={{ margin: 5 }} />
-                            <Button
-                                title="Them" />
-                        </View>
-                    </Modal>
-                </View>
             </View>
-            <FlatList
-                data={data}
-                showsVerticalScrollIndicator={false}
-                numColumns={2}
-                renderItem={({ item }) => <Card item={item} />}
-            />
+            <ScrollView refreshControl={
+                <RefreshControl refreshing={reloading}
+                    onRefresh={reloadData} />
+            }>
+                <SafeAreaView style={{ flex: 1, }}>
+                    <FlatList
+                        data={sanpham}
+                        showsVerticalScrollIndicator={false}
+                        numColumns={2}
+                        renderItem={({ item }) => <Card item={item} />}
+                    />
+                </SafeAreaView>
+            </ScrollView>
         </SafeAreaView>
     )
 }

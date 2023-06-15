@@ -14,7 +14,6 @@ import EditProfile from './component/EditProfile';
 import Add from './component/Add';
 import Register from './component/Register';
 
-
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 

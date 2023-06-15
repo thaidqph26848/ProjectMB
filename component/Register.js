@@ -104,7 +104,7 @@ const Register = ({ navigation }) => {
       </View>
       <StatusBar barStyle={"light-content"} />
       <SafeAreaView style={{ flex: 1, }}>
-        <Image style={{ width: '96%', height: 10, padding: 50, margin: 5 }} source={require('./image/signup.png')} />
+        <Image style={{ width: '97%', height: 10, padding: 50, margin: 5 }} source={require('./image/signup.png')} />
         <View style={styles.container}>
           <KeyboardAvoidingView behavior='position'>
 
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#1d8bf1",
-    marginLeft: 20
+    marginLeft: 40
   },
   singup: {
     color: '#1d8bf1',
@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     borderWidth: 1,
     borderColor: '#c2c2c2',
-    marginLeft: 96,
+    marginLeft: 130,
     marginBottom: 40
 
   }
