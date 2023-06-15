@@ -8,8 +8,13 @@ const { width } = Dimensions.get('screen');
 const cardWidth = width / 2 - 20;
 let strKey = 'loginInfo'
 var dem = 0;
+<<<<<<< HEAD
 let URL = "http://192.168.1.22:3000/sanpham";
 let URL_ADD = "http://192.168.1.22:3000/sanpham?_expand=cat";
+=======
+let URL = "http://172.19.200.210:3000/sanpham";
+
+>>>>>>> 3e53373e35ff8eafb1abf04dcf1683f6c4c0ca2e
 const TrangChu = ({ navigation }) => {
     const [isLoading, setLoading] = useState(true);
     const [sanpham, setsanpham] = useState([]);

@@ -22,7 +22,7 @@ const Login = ({ navigation }) => {
 
     //lay data
 
-    let url_login = 'http://192.168.1.22:3000/user?username=' + username;
+    let url_login = 'http://172.19.200.210:3000/user?username=' + username;
 
     fetch(url_login)
       .then((res) => {
